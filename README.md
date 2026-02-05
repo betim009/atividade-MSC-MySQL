@@ -5,16 +5,13 @@
 Esse repositorio vai ter dois projetos, com parte do projeto ja feito para ajudar apenas o desenvolvedor apenas na parte do MSC. 
 
 ### Projeto 1
-1. Rode: `cd projeto_1`
+1. Execute no terminal: `cd projeto_1`
 
-2. Iniciar o node npm init -y
+2. Execute no terminal: `npm install` 
 
-3. Instalar ferramentas do backend npm install cors dotenv express mysql2
+3. Execute no terminal: `npm install --save-dev nodemon`
 
-4. Instalar um live server npm install --save-dev nodemon
+4. Abra o package.json e crie a linha no scripts: `"dev": "nodemon app.js",`
 
-5. Abra o package.json e crie a linha no scripts: "dev": "nodemon app.js",
+5. Comando para iniciar o backend no terminal: `npm run dev`
 
-6. Comando para iniciar o backend no terminal: npm run dev
-
-7. Se a pasta node_modules nao existir rode: npm install
