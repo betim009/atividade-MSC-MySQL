@@ -1,1 +1,2 @@
-# atividade-MSC-MySQL
+# Atividades para praticar Arquitetura MSC + Express + MySQL
+**Arquitetura Models, Services e Controllers** esse repositorio tem o objetivo de ajudar desenvolvedores a praticar os conceitos da arquitetura MSC. 
