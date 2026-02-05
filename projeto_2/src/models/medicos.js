@@ -1,38 +1,58 @@
 const connection = require('./connection');
 
 async function getAll() {
-  // Buscar todos os medicos no banco de dados.
-  // Monte um SELECT simples sem WHERE para retornar todos os registros.
+  const [rows] = await connection.execute('SELECT * FROM medicos');
+  return rows;
 }
 
 async function getById(id) {
-  // Buscar um medico pelo ID.
-  // Use o parametro id para montar um SELECT com WHERE id = ?.
+  const [rows] = await connection.execute(
+    'SELECT * FROM medicos WHERE id = ?',
+    [id]
+  );
+  return rows[0];
 }
 
 async function create(medico) {
-  // Inserir um novo medico e retornar o resultado.
-  // Monte um INSERT usando os dados de medico e retorne o insertId.
+  const { nome, crm, especialidade } = medico;
+  const [result] = await connection.execute(
+    'INSERT INTO medicos (nome, crm, especialidade) VALUES (?, ?, ?)',
+    [nome, crm, especialidade]
+  );
+  return { id: result.insertId, ...medico };
 }
 
 async function update(id, medico) {
-  // Atualizar os dados de um medico existente.
-  // Use id no WHERE e os campos de medico no SET do UPDATE.
+  const { nome, crm, especialidade } = medico;
+  const [result] = await connection.execute(
+    'UPDATE medicos SET nome = ?, crm = ?, especialidade = ? WHERE id = ?',
+    [nome, crm, especialidade, id]
+  );
+  return result;
 }
 
 async function remove(id) {
-  // Remover um medico pelo ID.
-  // Monte um DELETE com WHERE id = ? e retorne o resultado.
+  const [result] = await connection.execute(
+    'DELETE FROM medicos WHERE id = ?',
+    [id]
+  );
+  return result;
 }
 
 async function getByCrm(crm) {
-  // Buscar medico pelo CRM (usado em validações).
-  // Use crm para montar um SELECT com WHERE crm = ?.
+  const [rows] = await connection.execute(
+    'SELECT * FROM medicos WHERE crm = ?',
+    [crm]
+  );
+  return rows[0];
 }
 
 async function getByEspecialidade(especialidade) {
-  // Buscar medicos pela especialidade.
-  // Use especialidade para montar um SELECT com WHERE especialidade = ?.
+  const [rows] = await connection.execute(
+    'SELECT * FROM medicos WHERE especialidade = ?',
+    [especialidade]
+  );
+  return rows;
 }
 
 module.exports = {
