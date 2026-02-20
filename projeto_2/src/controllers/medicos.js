@@ -1,28 +1,63 @@
 const medicosService = require('../services/medicos');
 
 async function getAll(req, res) {
-  // Retornar todos os medicos.
-  // Chame medicosService.getAll() e responda com status 200.
+  const medicos = await medicosService.getAll();
+  return res.status(200).json(medicos);
 }
 
 async function getById(req, res) {
-  // Retornar um medico pelo ID.
-  // Extraia id de req.params, chame o service e responda com status adequado.
+  const { id } = req.params;
+  if (!id || Number.isNaN(Number(id))) {
+    return res.status(400).json({ message: 'Id invalido' });
+  }
+  const medico = await medicosService.getById(id);
+
+  if (!medico) {
+    return res.status(404).json({ message: 'Medico nao encontrado' });
+  }
+
+  return res.status(200).json(medico);
 }
 
 async function create(req, res) {
-  // Criar um novo medico.
-  // Use req.body, chame o service e responda com status 201.
+  const { nome, crm, especialidade } = req.body;
+  if (!nome || !crm || !especialidade) {
+    return res.status(400).json({ message: 'Campos obrigatorios: nome, crm, especialidade' });
+  }
+  const medico = await medicosService.create(req.body);
+  return res.status(201).json(medico);
 }
 
 async function update(req, res) {
-  // Atualizar um medico existente.
-  // Extraia id de req.params e dados de req.body, chame o service.
+  const { id } = req.params;
+  if (!id || Number.isNaN(Number(id))) {
+    return res.status(400).json({ message: 'Id invalido' });
+  }
+  const { nome, crm, especialidade } = req.body;
+  if (!nome || !crm || !especialidade) {
+    return res.status(400).json({ message: 'Campos obrigatorios: nome, crm, especialidade' });
+  }
+  const result = await medicosService.update(id, req.body);
+
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ message: 'Medico nao encontrado' });
+  }
+
+  return res.status(200).json({ id: Number(id), ...req.body });
 }
 
 async function remove(req, res) {
-  // Remover um medico.
-  // Extraia id de req.params, chame o service e responda com status 204.
+  const { id } = req.params;
+  if (!id || Number.isNaN(Number(id))) {
+    return res.status(400).json({ message: 'Id invalido' });
+  }
+  const result = await medicosService.remove(id);
+
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ message: 'Medico nao encontrado' });
+  }
+
+  return res.status(204).end();
 }
 
 module.exports = {

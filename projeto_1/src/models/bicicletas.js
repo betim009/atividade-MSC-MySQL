@@ -1,38 +1,58 @@
 const connection = require('./connection');
 
 async function getAll() {
-  // Buscar todas as bicicletas no banco de dados.
-  // Monte um SELECT simples sem WHERE para retornar todos os registros.
+  const [rows] = await connection.execute('SELECT * FROM bicicletas');
+  return rows;
 }
 
 async function getById(id) {
-  // Buscar uma bicicleta pelo ID.
-  // Use o parametro id para montar um SELECT com WHERE id = ?.
+  const [rows] = await connection.execute(
+    'SELECT * FROM bicicletas WHERE id = ?',
+    [id]
+  );
+  return rows[0];
 }
 
 async function create(bicicleta) {
-  // Inserir uma nova bicicleta e retornar o resultado.
-  // Monte um INSERT usando os dados de bicicleta e retorne o insertId.
+  const { marca, modelo, ano, ciclista_id } = bicicleta;
+  const [result] = await connection.execute(
+    'INSERT INTO bicicletas (marca, modelo, ano, ciclista_id) VALUES (?, ?, ?, ?)',
+    [marca, modelo, ano, ciclista_id]
+  );
+  return { id: result.insertId, ...bicicleta };
 }
 
 async function update(id, bicicleta) {
-  // Atualizar os dados de uma bicicleta existente.
-  // Use id no WHERE e os campos de bicicleta no SET do UPDATE.
+  const { marca, modelo, ano, ciclista_id } = bicicleta;
+  const [result] = await connection.execute(
+    'UPDATE bicicletas SET marca = ?, modelo = ?, ano = ?, ciclista_id = ? WHERE id = ?',
+    [marca, modelo, ano, ciclista_id, id]
+  );
+  return result;
 }
 
 async function remove(id) {
-  // Remover uma bicicleta pelo ID.
-  // Monte um DELETE com WHERE id = ? e retorne o resultado.
+  const [result] = await connection.execute(
+    'DELETE FROM bicicletas WHERE id = ?',
+    [id]
+  );
+  return result;
 }
 
 async function getByMarca(marca) {
-  // Buscar bicicletas por marca.
-  // Use marca para montar um SELECT com WHERE marca = ?.
+  const [rows] = await connection.execute(
+    'SELECT * FROM bicicletas WHERE marca = ?',
+    [marca]
+  );
+  return rows;
 }
 
 async function getByCiclistaId(ciclistaId) {
-  // Buscar bicicletas associadas a um ciclista.
-  // Use ciclistaId para montar um SELECT com WHERE ciclista_id = ?.
+  const [rows] = await connection.execute(
+    'SELECT * FROM bicicletas WHERE ciclista_id = ?',
+    [ciclistaId]
+  );
+  return rows;
 }
 
 module.exports = {
